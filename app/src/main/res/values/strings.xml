@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">To-do-List</string>
+    <string name="action_settings">Actions</string>
+    <string name="nouv_tache">Nouvelle tâche</string>
+</resources>

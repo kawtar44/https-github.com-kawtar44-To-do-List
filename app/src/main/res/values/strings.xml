@@ -2,4 +2,10 @@
     <string name="app_name">To-do-List</string>
     <string name="action_settings">Actions</string>
     <string name="nouv_tache">Nouvelle tâche</string>
+    <string name="button_ajouter">Ajouter</string>
+    <string name="supprimer_tout">Supprimer tout</string>
+    <string name="alert_supprimer_message">êtes-vous sûr de vouloir supprimer?</string>
+    <string name="alert_supprimer_title">Confirmation</string>
+    <string name="alert_ok">Oui</string>
+    <string name="alert_cancel">Non</string>
 </resources>

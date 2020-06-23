@@ -1,5 +1,7 @@
 package com.example.to_do_list;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -13,7 +15,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -25,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText mavariableEditText;
     private ListView mavariableListView;
     private ArrayAdapter<String> aa;
+    private Button mavariableButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         mavariableEditText=findViewById(R.id.editText);
         mavariableListView=findViewById(R.id.list);
+        mavariableButton=findViewById(R.id.button);
         todoItems = new ArrayList<String>();
         aa = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,todoItems);
         mavariableListView.setAdapter(aa);
@@ -63,7 +69,28 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        mavariableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                todoItems.add(mavariableEditText.getText().toString());
+                aa.notifyDataSetChanged();
+                mavariableEditText.setText("");
+
+
+            }
+        });
+        mavariableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                todoItems.remove(position);
+                aa.notifyDataSetChanged();
+            }
+        });
     }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,7 +107,32 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.supprimer_tout) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.alert_supprimer_message)
+                    .setTitle(R.string.alert_supprimer_title)
+                    .setPositiveButton(R.string.alert_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            todoItems.clear();
+                            aa.notifyDataSetChanged();
+
+                        }
+                    })
+                    .setNegativeButton(R.string.alert_cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+                        }
+                    });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+
+
             return true;
         }
 

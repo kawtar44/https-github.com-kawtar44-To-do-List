@@ -2,7 +2,11 @@ package com.example.to_do_list;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -11,7 +15,9 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,8 +28,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         mavariableEditText=findViewById(R.id.editText);
         mavariableListView=findViewById(R.id.list);
         mavariableButton=findViewById(R.id.button);
+        registerForContextMenu( mavariableListView);
         //todoItems = new ArrayList<String>();
         //aa = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,todoItems);
         //mavariableListView.setAdapter(aa);
@@ -153,6 +162,70 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Cursor SelectedTaskCursor = (Cursor) mavariableListView.getItemAtPosition(info.position);
+        final String TexteListe = SelectedTaskCursor.getString(SelectedTaskCursor.getColumnIndex("title"));
+        PackageManager packageManager = getPackageManager();
+        Intent myIntent;
+        boolean isIntentSafe;
+        List<ResolveInfo> activities;
+        Toast toast;
+        /*if (item.getItemId() == R.id.rech_google) {
+            Uri recherche = Uri.parse(TexteListe);
+            myIntent = new Intent(Intent.ACTION_VIEW, recherche);
+            List<ResolveInfo> activities = packageManager.queryIntentActivities(myIntent, 0);
+            boolean isIntentSafe = activities.size() > 0;
+            Toast toast = Toast.makeText(this,"Je fais la recherche de : "+isIntentSafe+TexteListe,Toast.LENGTH_SHORT);
+            toast.show();
+            if (isIntentSafe) {
+                startActivity(myIntent);
+            }
+        }*/
+
+
+
+
+
+        switch (item.getItemId()) {
+            case R.id.rech_google:
+                Uri recherche = Uri.parse("https://www.google.com/search?q="+TexteListe);
+                myIntent = new Intent(Intent.ACTION_VIEW,recherche);
+                activities = packageManager.queryIntentActivities(myIntent, 0);
+                isIntentSafe = activities.size() > 0;
+                toast = Toast.makeText(this,"Je fais la recherche de :  "+isIntentSafe+" "+TexteListe,Toast.LENGTH_SHORT);
+                toast.show();
+                if (isIntentSafe) {
+                    startActivity(myIntent);
+                }
+                return true;
+
+            case R.id.loc_google:
+                Uri location = Uri.parse("geo:0,0?q="+TexteListe);
+                myIntent  = new Intent(Intent.ACTION_VIEW,location);
+                activities = packageManager.queryIntentActivities(myIntent, 0);
+                isIntentSafe = activities.size() > 0;
+                toast = Toast.makeText(this,"Je fais la recherche de :  "+isIntentSafe+" "+TexteListe,Toast.LENGTH_SHORT);
+                toast.show();
+                if (isIntentSafe) {
+                    startActivity(myIntent);
+                }
+                return true;
+
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
 

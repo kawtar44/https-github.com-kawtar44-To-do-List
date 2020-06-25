@@ -8,4 +8,6 @@
     <string name="alert_supprimer_title">Confirmation</string>
     <string name="alert_ok">Oui</string>
     <string name="alert_cancel">Non</string>
+    <string name="txt_google">Rechercher avec Google</string>
+    <string name="google_map">Localiser avec GoogleMap</string>
 </resources>
